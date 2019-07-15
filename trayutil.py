@@ -1,12 +1,23 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 """
-Copyright (c) 2017 Daniel May
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Copyright (c) 2017 Daniel May Permission is hereby granted, free of charge, to
+any person obtaining a copy of this software and associated documentation files
+(the "Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish, distribute,
+sublicense, and/or sell copies of the Software, and to permit persons to whom
+the Software is furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 """
 
 import os
@@ -25,10 +36,10 @@ MENU_PATH = os.path.join(CONFIG_DIR, "menu.json")
 class TrayAction(QtWidgets.QAction):
     def __init__(self, text, cmd, parent=None):
         super().__init__(text, parent)
-        self.cmd = cmd
+        self.cmd = cmd.split()
 
     def invoke(self):
-        subprocess.call(self.cmd, shell=True)
+        subprocess.Popen(self.cmd)
 
 
 class TrayUtil(QtWidgets.QSystemTrayIcon):
@@ -57,20 +68,15 @@ class TrayUtil(QtWidgets.QSystemTrayIcon):
 
         walk(menu, structure)
 
-        # add an exit entry
-        menu.addSeparator()
-        exitAction = menu.addAction("Quit")
-        exitAction.triggered.connect(lambda: sys.exit(0))
-
 
 def main(menu_path, args):
     app = QtWidgets.QApplication(args)
 
     tu = TrayUtil(menu_path,
-        QtGui.QIcon(os.path.join(SCRIPT_DIR, "tray.png"))
-    )
+                  QtGui.QIcon(os.path.join(SCRIPT_DIR, "tray.png"))
+                  )
     tu.show()
-    
+
     sys.exit(app.exec_())
 
 
